@@ -1,10 +1,19 @@
 import React from "react";
-import { trpc } from "../services";
+import { client, trpc } from "../services";
 
 type Props = {};
 
 const TodoList = (props: Props) => {
   const { data, isLoading, isError, error } = trpc.useQuery(["todos.get"]);
+  const deleteTodo = trpc.useMutation("todos.delete");
+
+  const onDelete = (id: number) => {
+    deleteTodo.mutate(id, {
+      onSuccess: () => {
+        client.invalidateQueries(["todos.get"]);
+      },
+    });
+  };
 
   if (isLoading)
     return (
@@ -32,11 +41,17 @@ const TodoList = (props: Props) => {
     <div>
       {data.map((todo) => (
         <div className="flex mb-4 items-center" key={todo.id}>
-          <p className="w-full text-grey-darkest">{todo.item_text}</p>
-          <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green border-green hover:bg-green">
-            {todo.status ? "DONE" : "NOT DONE"}
-          </button>
-          <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">
+          <p
+            className={`w-full text-gray-900 hover:cursor-pointer ${
+              todo.status && "line-through"
+            }`}
+          >
+            {todo.item_text}
+          </p>
+          <button
+            className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red-500"
+            onClick={() => onDelete(todo.id)}
+          >
             Remove
           </button>
         </div>
