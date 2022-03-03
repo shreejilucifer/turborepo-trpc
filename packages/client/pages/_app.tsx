@@ -1,9 +1,8 @@
+import "../src/styles/global.css";
 import { AppProps } from "next/app";
 import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { trpc } from "../src/services";
-
-const client = new QueryClient();
+import { QueryClientProvider } from "react-query";
+import { client, trpc } from "../src/services";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [trpcClient] = useState(() =>

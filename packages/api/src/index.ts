@@ -1,13 +1,10 @@
 import express from "express";
-import * as trpc from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
+import { createRouter } from "./app/app.router";
+import { todos } from "./todo/todo.router";
 
-const appRouter = trpc.router().query("hello", {
-  resolve() {
-    return "Hello World";
-  },
-});
+const appRouter = createRouter().merge("todos.", todos);
 
 export type AppRouter = typeof appRouter;
 

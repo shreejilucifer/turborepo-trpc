@@ -11,9 +11,17 @@ Boilerplate for scaffolding easy fullstack Typescript projects.
 
 ## Development
 
+Initiates SQLite Database
+
+```bash
+# Inside packages/api
+npx prisma db push
+```
+
 Runs both client and server in parallel environments
 
 ```bash
+# Root Directory
 yarn dev
 ```
 
