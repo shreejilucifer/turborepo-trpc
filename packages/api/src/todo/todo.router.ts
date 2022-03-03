@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { createRouter } from "../app/app.router";
-import { createTodo, deleteTodo, getTodos } from "./todo.controller";
+import {
+  createTodo,
+  deleteTodo,
+  getTodos,
+  updateTodoStatus,
+} from "./todo.controller";
 
 export const todos = createRouter()
   .query("get", {
@@ -13,4 +18,8 @@ export const todos = createRouter()
   .mutation("delete", {
     input: z.number(),
     resolve: ({ input }) => deleteTodo(input),
+  })
+  .mutation("update", {
+    input: z.number(),
+    resolve: ({ input }) => updateTodoStatus(input),
   });

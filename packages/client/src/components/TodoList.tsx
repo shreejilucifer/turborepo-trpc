@@ -6,9 +6,18 @@ type Props = {};
 const TodoList = (props: Props) => {
   const { data, isLoading, isError, error } = trpc.useQuery(["todos.get"]);
   const deleteTodo = trpc.useMutation("todos.delete");
+  const updateTodoStatus = trpc.useMutation("todos.update");
 
   const onDelete = (id: number) => {
     deleteTodo.mutate(id, {
+      onSuccess: () => {
+        client.invalidateQueries(["todos.get"]);
+      },
+    });
+  };
+
+  const onUpdateStatus = (id: number) => {
+    updateTodoStatus.mutate(id, {
       onSuccess: () => {
         client.invalidateQueries(["todos.get"]);
       },
@@ -42,6 +51,7 @@ const TodoList = (props: Props) => {
       {data.map((todo) => (
         <div className="flex mb-4 items-center" key={todo.id}>
           <p
+            onClick={() => onUpdateStatus(todo.id)}
             className={`w-full text-gray-900 hover:cursor-pointer ${
               todo.status && "line-through"
             }`}
